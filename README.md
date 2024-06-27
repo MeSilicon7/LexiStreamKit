@@ -55,12 +55,7 @@ This guide introduces LexiStream, a library designed to streamline the creation 
 - Easy integration with any web application.
 - No complex build tools required.
 
-**We warmly invite you to contribute to the LexiStream project! Join us in enhancing this innovative tool and help shape the future of conversational interfaces. Your ideas and contributions are eagerly awaited!**
-
-<video>
-  <source src="assets/Github-intro.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/MeSilicon7/LexiStreamKit/blob/main/assets/Github-intro.mp4
 
 ## Table of contents
 
