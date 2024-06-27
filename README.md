@@ -6,6 +6,7 @@
 </p>
 
 
+
 <h3 align="center">Copy, Paste, Edit & Deploy</h3>
 <p align="center">
     <a href="https://lexistreamkit.mesilicon7.com" target="_blank">
@@ -55,7 +56,7 @@ This guide introduces LexiStream, a library designed to streamline the creation 
 - Easy integration with any web application.
 - No complex build tools required.
 
-https://github.com/MeSilicon7/LexiStreamKit/blob/main/assets/Github-intro.mp4
+https://github.com/MeSilicon7/LexiStreamKit/assets/133137701/76d899f5-1f94-490e-94c1-221fa85e3c7e
 
 ## Table of contents
 
