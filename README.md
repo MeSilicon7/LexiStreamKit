@@ -75,13 +75,13 @@ https://github.com/MeSilicon7/LexiStreamKit/assets/133137701/76d899f5-1f94-490e-
 > [!NOTE]
 >  Here example projects: [Flask LexiStream Implementation Example](https://github.com/MeSilicon7/LexiStreamKit/tree/main/example/openai/flask) 
 
-<details>
-<summary>Short Tutorial</summary>
-https://github.com/MeSilicon7/LexiStreamKit/blob/5f9e126a885f520140a273b9cb01fde31d0bba25/assets/Video%20Tutorial.mp4
-</details>
-
 > [!IMPORTANT]
 > Your backend needs to support Server-Sent Events (SSE) to stream data to the client effectively. **Replace every newline character ('\n') with ' \<br\> ' since '\n' does not behave as expected in SSE; it seems to disappear.** Additionally, you should conclude your streaming with 'data: finish_reason: stop\n\n' to ensure the client side recognizes that the stream has ended. Without this specific message, LexiStream will continue to wait for more data and won't close the stream.
+
+### Short Tutorial
+
+https://github.com/MeSilicon7/LexiStreamKit/assets/133137701/95ac6a6e-d8dd-49cf-9126-99544b4c8cea
+
 
 Include the LexiStream.js script in your project:(You can download from release page & also you can use find in src folder)
 
