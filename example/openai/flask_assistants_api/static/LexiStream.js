@@ -56,7 +56,8 @@
             const message = this.inputBox.value.trim();
             if (message) {
                 // Switch message sending if using Assistants API
-                if (this.config.isAssistant){
+                // if useAssistant is undefined in config it will evaluate as false
+                if (this.config.useAssistant === true){
                     this.sendAsstMessage(message);
                 } else {
                     this.sendMessage(message);
