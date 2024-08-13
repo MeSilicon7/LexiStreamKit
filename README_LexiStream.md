@@ -24,6 +24,7 @@ Initializes a new instance of the `LexiStream` class.
 - `customLoadingMessage` (string, optional): Message displayed during loading. Defaults to `'Processing...'`.
 - `reportConnectionErrorMessage` (string, optional): Error message for connection issues. Defaults to `'Failed to send message. Please try again later. Please check your internet connection.'`.
 - `streamingErrorMessage` (string, optional): Error message when the streaming server is not responsive. Defaults to `'Openai server is not responding. Please try again later.'`.
+- `useAssistant` (boolean, optional): Indicator to activate Assistant functionality. Defaults to `undefined` / `false`
 
 ### Methods
 
@@ -31,7 +32,7 @@ Initializes a new instance of the `LexiStream` class.
 Sets up event listeners for the start and stop buttons, and the input box for submitting on enter key press.
 
 #### `processInput()`
-Processes the user input from the input box, sends it to the server, and clears the input box.
+Processes the user input from the input box, sends it to the server, and clears the input box. Handles input for Assistants API separately.
 
 #### `startStream()`
 Starts the streaming connection to the server, handling incoming data and errors.
@@ -60,6 +61,14 @@ Animates the typing of text into an HTML element.
 #### `updateUI()`
 Updates the UI based on the streaming state, enabling or disabling the start and stop buttons.
 
+#### `sendAsstMessage(message)`
+Sends a message to the server to be added to an Assistant thread and handles the response to start streaming or display an error. 
+
+#### `startAsstStream()`
+Starts the streaming connection to the server specifically for Assistants functionality, handling incoming data and errors.
+
+#### `requestNewThreadId()`
+Asyncronously requests a new OpenAI thread id from the server. Returns the freshly created thread id.
 
 **LexiStream relies on 'LexiMark' for its UI components, which you can find in the 'src' folder.** LexiMark converts markdown text into HTML using the markdown-it library and adds syntax highlighting with the PrismJS library. To fully utilize LexiStream, you'll need to include these libraries in your project. Additionally, feel free to customize the LexiMark library to meet your specific needs.
 
