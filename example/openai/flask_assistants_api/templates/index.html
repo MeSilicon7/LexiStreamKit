@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+
+    <title>OpenAI Chat</title>
+    <style>
+        .chat-controls {
+            position: fixed;   /* Fixed positioning to make it stick to a location */
+            bottom: 0;         /* Align at the bottom */
+            left: 50%;         /* Center horizontally */
+            transform: translateX(-50%); /* Shift back by 50% of its own width to truly center it */
+            width: auto;       /* Adjust width as needed or set a specific width */
+            padding: 10px;     /* Optional: Adds some space inside the div */
+            background-color: #f9f9f9; /* Optional: Background color */
+            border-top: 1px solid #ccc; /* Optional: Adds a border on the top */
+            box-shadow: 0px -2px 5px rgba(0,0,0,0.1); /* Optional: Adds subtle shadow above the bar */
+            z-index: 1000;     /* Ensures it stays on top of other content */
+        }
+
+        .error {
+            color: #ff0000; /* Red color for error text */
+            background-color: #ffe6e6; /* Light red background */
+            border: 1px solid #ff0000; /* Red border */
+            padding: 10px; /* Padding for spacing */
+            border-radius: 5px; /* Rounded corners */
+            margin: 10px 0; /* Margin for spacing */
+            font-family: Arial, sans-serif; /* Font style */
+        }
+        .loading {
+          padding: 8px 12px;
+          margin: 4px 0;
+          border-radius: 4px;
+          /* background-color: #e7ffe7; Light green background for assistant messages */
+          border: 1px solid #afffa0;
+          font-size: 14px;
+          color: #333;
+          float: left;
+          clear: both;
+        }
+
+        .loading::after {
+          content: "";
+          animation: dots 1.5s steps(1) infinite;
+        }
+
+        @keyframes dots {
+          0%, 20% {
+            content: ""; /* No dots initially */
+          }
+          21%, 40% {
+            content: "."; /* One dot appears */
+          }
+          41%, 60% {
+            content: ".."; /* Two dots appear */
+          }
+          61%, 80% {
+            content: "..."; /* Three dots appear */
+          }
+          81%, 100% {
+            content: "..."; /* Keep three dots before restarting */
+          }
+        }
+
+        *{
+          font-family: "Poppins", sans-serif;
+        }
+
+        #box{
+          padding: 50px;
+          margin: 100px;
+        }
+
+        #box::after{
+          content: "";
+          display: block;
+          clear: both;
+        }
+
+        /* User message styling */
+        .user-message {
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 4px;
+            background-color: #e0e0ff; /* Light blue background for user messages */
+            border: 1px solid #b0b0ff;
+            font-size: 14px;
+            color: #333;
+            float: right;
+            clear: both;
+        }
+
+        /* Assistant message styling, using lexi-stream custom component */
+        .assistant-message {
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 4px;
+            /* background-color: #e7ffe7; Light green background for assistant messages */
+            border: 1px solid #afffa0;
+            font-size: 14px;
+            color: #333;
+            display: block;
+            clear: both;
+            float: left;
+        }
+    </style>
+
+    <script type="module" src="{{ url_for('static', filename='LexiMark.js') }}"></script>
+
+  </head>
+  <body>
+
+  
+ <h1>OpenAI Chat (write a python tutorial for hello world) </h1>
+
+  <div id="box">
+    {% for chat in chat_history %}
+        {% if chat.role == "user" %}
+            <div class="user-message">{{ chat.content }}</div>
+        {% elif chat.role == "assistant" %}
+            <lexi-mark class="assistant-message">{{ chat.content }}</lexi-mark>
+
+
+          {# else if you want to show the role of the chat
+              <div>
+                <lexi-mark class="assistant-message">{{ chat.role }}: {{ chat.content }}</lexi-mark>
+              </div>
+          #}
+
+        {% endif %}
+    {% endfor %}
+  </div>
+  <div class="chat-controls">
+    <input type="text" id="inputBoxID">
+    <button id="StartChat">Start Chat</button>
+    <button id="stop">Stop</button>
+  </div>
+
+
+
+  <script src="{{ url_for('static', filename='LexiStream.js') }}"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const streamConfig = {
+              sendRequest: "/chat",
+              listen: "/stream",
+              sendContent: "#inputBoxID",
+              start: "#StartChat",
+              stop: "#stop",
+              box: "#box",
+              customLoadingMessage: "Processing",
+              useAssistant: true,
+          };
+  
+          new LexiStream(streamConfig);
+      });
+
+  </script>
+
+  </body>
+</html>

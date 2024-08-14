@@ -65,8 +65,8 @@
                 this.inputBox.value = '';
             }
         }
-    
         
+
         startStream() {
             if (this.eventSource) {
                 console.log('Stream is already active.');
@@ -94,7 +94,7 @@
         
             this.updateUI();
         }
-    
+
         displayLoading(show) {
             
             if (!this.loadingElement) {
@@ -137,7 +137,7 @@
             this.updateUI();
             this.displayLoading(false); 
         }
-    
+
         sendMessage(message) {
             fetch(this.config.sendRequest, {
                 method: 'POST',
