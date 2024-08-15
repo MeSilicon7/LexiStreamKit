@@ -155,7 +155,7 @@
               customLoadingMessage: "Processing",
               useAssistant: true,
               // Set thread_id from the server-side variable, or default to null if undefined
-              threadId: "{{ threadId or 'null' }}"
+              threadId: "{{ threadId }}" || null,
           };
     
           new LexiStream(streamConfig);

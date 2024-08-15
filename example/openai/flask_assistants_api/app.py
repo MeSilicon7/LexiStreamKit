@@ -63,41 +63,43 @@ def new_thread_id():
 
 @app.route('/add-message', methods=['POST'])
 def add_message():
-    # adds a message to a provided thread_id
-    # will be used just before /stream is called
     data = request.get_json()
     thread_id = data.get('threadId')
     message = data.get('message')
 
-    # Add user message to thread
     client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
         content=message,
     )
-    # debug
-    print(f"Added message to thread {thread_id}: {message}")
-
-    # Logic to add the message to the specified thread
+    for thread in save_thread:
+        if thread["thread_id"] == thread_id:
+            thread["chat_history"].append({"role": "user", "content": message})
+            break
+    else:
+        save_thread.append({"thread_id": thread_id, "chat_history": [{"role": "user", "content": message}]})
     return jsonify({'success': True})
 
 
-# Stream Assitants API Response
+response_messages = []
+# Global variable to store thread_id
+current_thread_id = None
+
 @app.route("/stream", methods=["GET"])
 def stream():
-
+    global current_thread_id  # Declare the global variable
     thread_id = request.args.get('threadId')
-
-    # This is added redundancy
     if not thread_id:
         thread = client.beta.threads.create()
         thread_id = thread.id
     else:
         thread = client.beta.threads.retrieve(thread_id)
 
-    # Reference the Assistants API Docs here for more info on how streaming works:
-    # https://platform.openai.com/docs/api-reference/runs/createRun
+    # Set the global thread_id
+    current_thread_id = thread_id
+
     def event_generator():
+        global response_messages
         finished = False
         with client.beta.threads.runs.create(
             thread_id=thread_id,
@@ -110,6 +112,7 @@ def stream():
                         if content.type == 'text':
                             data = content.text.value.replace('\n', ' <br> ')
                             yield f"data: {data}\n\n"
+                            response_messages.append(data)
                 
                 elif event.event == "done":
                     finished = True
@@ -119,8 +122,27 @@ def stream():
         if finished:
             return
 
-    return Response(stream_with_context(event_generator()), mimetype="text/event-stream")
+    response = Response(stream_with_context(event_generator()), mimetype="text/event-stream")
+    response.call_on_close(post_stream_processing)
+    return response
 
+def post_stream_processing():
+    global response_messages
+    global current_thread_id  # Access the global thread_id
+
+    # convert to string and save to the chat history
+    response_messages_str = ''.join(response_messages)
+    response_messages_str = response_messages_str.replace("/n/n", "").strip()
+    print("Full message:", response_messages_str)
+
+    # Save the response_messages_str to the chat history
+    for thread in save_thread:
+        if thread["thread_id"] == current_thread_id:
+            thread["chat_history"].append({"role": "assistant", "content": response_messages_str})
+            break
+
+    # Clear the list if you plan to reuse it for the next stream
+    response_messages.clear()
 
 if __name__ == "__main__":
     app.run(port=5000)
