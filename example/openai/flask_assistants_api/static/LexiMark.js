@@ -162,7 +162,7 @@
                 const scrollPoint = window.scrollY; 
             
                 const scrolledFromTop = windowHeight + scrollPoint;
-                const threshold = 25; // Distance from the bottom to consider "at the bottom"
+                const threshold = 100; // Distance from the bottom to consider "at the bottom"
     
                 this.isUserAtBottom = scrolledFromTop >= totalPageHeight - threshold;
                 

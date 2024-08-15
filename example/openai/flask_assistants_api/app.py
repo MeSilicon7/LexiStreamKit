@@ -24,7 +24,6 @@ chat_history = [
     {"role": "system", "content": "You are a helpful assistant."},
 ]
 
-
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html", chat_history=chat_history)
