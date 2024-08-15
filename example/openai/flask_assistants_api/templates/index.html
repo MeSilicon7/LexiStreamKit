@@ -82,19 +82,24 @@
     
     <div class="container-fluid p-0">
         <div class="row g-0">
-            <!-- Offcanvas Sidebar for Contacts -->
+            <!-- Offcanvas Sidebar for Thread History -->
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasContacts" aria-labelledby="offcanvasContactsLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasContactsLabel">Chat History</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <!-- Contacts list -->
+                    <!-- Thread list -->
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action active">Contact 1</a>
-                        <a href="#" class="list-group-item list-group-item-action">Contact 2</a>
-                        <a href="#" class="list-group-item list-group-item-action">Contact 3</a>
-                        <!-- More contacts -->
+
+                      {% for thread in threads %}
+                      <!-- Correct the url_for and dynamic class application -->
+                      <a href="{{ url_for('chat_with_thread', thread_id=thread.thread_id) }}" class="list-group-item list-group-item-action {% if thread.thread_id == request.view_args['thread_id'] %}active{% endif %}">
+                          Thread ID: {{ thread.thread_id }}
+                      </a>
+                  {% endfor %}
+                  
+
                     </div>
                 </div>
             </div>
@@ -106,29 +111,22 @@
                         <i class="bi bi-list"></i> Chat History
                     </button>
                     <h4 class="flex-grow-1 text-center">LexiStreamKit</h4>
-                    <button class="btn btn-outline-dark rounded-pill" type="button">
+                    <a href="/" class="btn btn-outline-dark rounded-pill" role="button">
                         <i class="bi bi-box-arrow-right"></i>New Chat 
-                    </button>
+                    </a>
                 </div>
                 <div id="box" class="chat-box bg-white p-3 mx-auto" style="width: 50%;">
-                    <!-- Messages will be shown here -->
-
+                    <!-- Messages history will show here -->
                     {% for chat in chat_history %}
-                    {% if chat.role == "user" %}
-                        <div class="user-message p-2 border rounded mb-2 text-end">{{ chat.content }}</div>
-                    {% elif chat.role == "assistant" %}
-                        <lexi-mark class="assistant-message p-2 border rounded mb-2">{{ chat.content }}</lexi-mark>
-            
-            
-                    {# else if you want to show the role of the chat
-                        <div>
-                            <lexi-mark class="assistant-message p-2 border rounded mb-2">{{ chat.role }}: {{ chat.content }}</lexi-mark>
-                        </div>
-                    #}
-            
-                    {% endif %}
-                {% endfor %}
-                    
+
+                        {% if chat.role == "user" %}
+                            <div class="user-message p-2 border rounded mb-2 text-end">{{ chat.content }}</div>
+                        {% elif chat.role == "assistant" %}
+                            <lexi-mark class="assistant-message p-2 border rounded mb-2">{{ chat.content }}</lexi-mark>
+                
+                        {% endif %}
+                        
+                    {% endfor %}
                 </div>
                 
                 <!-- Message Input -->
@@ -137,7 +135,7 @@
                     <button class="btn btn-dark" id="StartChat">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 256 256"><path d="M231.87,114l-168-95.89A16,16,0,0,0,40.92,37.34L71.55,128,40.92,218.67A16,16,0,0,0,56,240a16.15,16.15,0,0,0,7.93-2.1l167.92-96.05a16,16,0,0,0,.05-27.89ZM56,224a.56.56,0,0,0,0-.12L85.74,136H144a8,8,0,0,0,0-16H85.74L56.06,32.16A.46.46,0,0,0,56,32l168,95.83Z"></path></svg>
                     </button>
-                    <button class="btn btn-dark" id="stop">Stop</button>
+                    <button class="btn btn-dark" id="stop" disabled>Stop</button>
                 </div>
             </div>
         </div>
@@ -149,7 +147,6 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
           const streamConfig = {
-              sendRequest: "/chat",
               listen: "/stream",
               sendContent: "#inputBoxID",
               start: "#StartChat",
@@ -157,11 +154,13 @@
               box: "#box",
               customLoadingMessage: "Processing",
               useAssistant: true,
+              // Set thread_id from the server-side variable, or default to null if undefined
+              threadId: "{{ threadId or 'null' }}"
           };
-  
+    
           new LexiStream(streamConfig);
       });
-
-  </script>
+    </script>
+    
 </body>
 </html>

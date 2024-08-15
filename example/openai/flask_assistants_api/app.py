@@ -20,20 +20,36 @@ ASSISTANT_ID = os.environ.get("OPENAI_ASSISTANT_ID")
 app = Flask(__name__)
 CORS(app)
 
-chat_history = [
-    {"role": "system", "content": "You are a helpful assistant."},
+# This is a temporary solution to store the chat history of a thread
+# This will be replaced with a database in the future
+
+save_thread = [
+    {
+        "thread_id": "thread_Bk3LznxbN17uqJxHiWq1ulJ6",
+        "chat_history": [
+            {"role": "user", "content": "Hello"},
+            {"role": "assistant", "content": "Hello! How can I assist you today?"},
+        ]
+    },
 ]
 
 @app.route("/", methods=["GET"])
 def index():
-    return render_template("index.html", chat_history=chat_history)
+    # send existing all thread to render template as a list
+    return render_template("index.html", threads=save_thread)
 
+#Todo: new route for chat with old thread which should take thread id as input and return the chat history of that thread
+@app.route("/chat/<thread_id>", methods=["GET"])
+def chat_with_thread(thread_id):
+    # it will render index.html with chat history of the thread 
+    for thread in save_thread:
+        if thread["thread_id"] == thread_id:
+            print(thread_id)
+            # Pass the thread_id to the template along with other data
+            return render_template("index.html", threads=save_thread, chat_history=thread["chat_history"], threadId=thread_id)
+    # Return JSON response with thread_id when not found
+    return jsonify({"message": "Thread not found", "threadId": thread_id})
 
-@app.route("/chat", methods=["POST"])
-def chat():
-    content = request.json.get("message")
-    chat_history.append({"role": "user", "content": content})
-    return jsonify(success=True)
 
 
 # Routes For Assistants API Functionality
@@ -41,6 +57,7 @@ def chat():
 @app.route("/new-thread-id", methods=["GET"])
 def new_thread_id():
     thread = client.beta.threads.create()
+    print(f"Created new thread: {thread.id}")
     return jsonify({'threadId': thread.id})
 
 
@@ -58,7 +75,9 @@ def add_message():
         role="user",
         content=message,
     )
-    
+    # debug
+    print(f"Added message to thread {thread_id}: {message}")
+
     # Logic to add the message to the specified thread
     return jsonify({'success': True})
 
@@ -102,13 +121,6 @@ def stream():
 
     return Response(stream_with_context(event_generator()), mimetype="text/event-stream")
 
-
-
-@app.route("/reset", methods=["POST"])
-def reset_chat():
-    global chat_history
-    chat_history = [{"role": "system", "content": "You are a helpful assistant."}]
-    return jsonify(success=True)
 
 if __name__ == "__main__":
     app.run(port=5000)

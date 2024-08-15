@@ -31,7 +31,7 @@
             this.messageContainer = null;
             this.reportConnectionErrorMessage = config.reportConnectionErrorMessage || 'Failed to send message. Please try again later. Please check your internet connection.'; 
             this.streamingErrorMessage = config.streamingErrorMessage || 'Openai server is not responding. Please try again later.';  
-            this.threadId = null;
+            this.threadId = config.threadId || null;
     
             this.attachEventListeners();
         }
