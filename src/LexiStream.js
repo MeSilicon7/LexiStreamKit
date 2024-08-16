@@ -9,7 +9,7 @@
  * LexiStream - Easily Create a Chatbot Interface with OpenAI's GPT API
  *
  * Author: MeSilicon7
- * Version: 1.0.0-beta
+ * Version: 1.0.1
  * Repository: https://github.com/MeSilicon7
  * License: MIT
  *
@@ -31,7 +31,7 @@
             this.messageContainer = null;
             this.reportConnectionErrorMessage = config.reportConnectionErrorMessage || 'Failed to send message. Please try again later. Please check your internet connection.'; 
             this.streamingErrorMessage = config.streamingErrorMessage || 'Openai server is not responding. Please try again later.';  
-            this.threadId = null;
+            this.threadId = config.threadId || null;
     
             this.attachEventListeners();
         }

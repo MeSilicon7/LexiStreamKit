@@ -9,7 +9,7 @@
  * LexiStream - Easily Create a Chatbot Interface with OpenAI's GPT API
  *
  * Author: MeSilicon7
- * Version: 1.0.0-beta
+ * Version: 1.0.1
  * Repository: https://github.com/MeSilicon7
  * License: MIT
  *
