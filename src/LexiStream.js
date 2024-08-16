@@ -9,7 +9,7 @@
  * LexiStream - Easily Create a Chatbot Interface with OpenAI's GPT API
  *
  * Author: MeSilicon7
- * Version: 1.0.1
+ * Version: 1.1.0
  * Repository: https://github.com/MeSilicon7
  * License: MIT
  *
@@ -130,12 +130,35 @@
         
         stopStream() {
             if (this.eventSource) {
-                this.eventSource.close();
-                this.eventSource = null;
-                this.messageContainer = null;
+                // Notify the server before closing the connection so server can take action based on that
+                fetch('/stop-stream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify({ threadId: this.threadId })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Stream stopped successfully.');
+                    } else {
+                        console.error('Failed to stop stream.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error stopping stream:', error);
+                })
+                .finally(() => {
+                    this.eventSource.close();
+                    this.eventSource = null;
+                    this.messageContainer = null;
+                    this.updateUI();
+                    this.displayLoading(false); 
+                });
+            } else {
+                this.updateUI();
+                this.displayLoading(false); 
             }
-            this.updateUI();
-            this.displayLoading(false); 
         }
     
         sendMessage(message) {

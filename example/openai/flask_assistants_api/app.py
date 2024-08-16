@@ -162,5 +162,16 @@ def stream():
     return response
 
 
+# when the user stops the stream, we need to call post_stream_processing
+@app.route("/stop-stream", methods=["POST"])
+def stop_stream():
+    data = request.get_json()
+    thread_id = data.get("threadId")
+    # Explicitly call post_stream_processing here
+    if thread_id == current_thread_id:
+        post_stream_processing()
+    return jsonify({"success": True})
+
+
 if __name__ == "__main__":
     app.run(port=5000)
