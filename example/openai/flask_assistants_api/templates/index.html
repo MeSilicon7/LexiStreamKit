@@ -158,8 +158,13 @@
               threadId: "{{ threadId }}" || null,
           };
     
-          new LexiStream(streamConfig);
-      });
+        new LexiStream(streamConfig);
+
+        // scroll to bottom of window
+        window.scrollTo(0, document.body.scrollHeight);
+        
+        });
+
     </script>
     
 </body>
