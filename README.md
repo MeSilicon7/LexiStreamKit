@@ -1,3 +1,11 @@
+**Project Archived**  
+
+This project was started as a learning exercise, and while it has been a valuable experience, I no longer have the time to maintain it or address issues. There are many more advanced and well-supported projects available in React, Svelte, Vue, and other ecosystems that users may find more suitable for their needs.  
+
+Feel free to use this code as a reference, copy it, find bugs, and resolve them as needed for your own projects.  
+
+Thank you to everyone who has shown interest in this project! 🎉  
+
 
 <p align="center">
   <a href="https://lexistreamkit.mesilicon7.com" target="_blank" rel="noopener noreferrer">
